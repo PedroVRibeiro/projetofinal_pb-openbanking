@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -36,6 +37,11 @@ public class ProductController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductDto> findById(@PathVariable Integer id) {
 		return productService.findById(id);
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<List<ProductDto>> search(@RequestParam Double max_price, @RequestParam Double min_price) {
+		return productService.search(max_price, min_price);
 	}
 	
 	@PostMapping @Transactional

@@ -66,4 +66,14 @@ public class ProductService {
 		return ResponseEntity.notFound().build();
 	}
 
+	public ResponseEntity<List<ProductDto>> search(Double max_price, Double min_price) {
+		List<Product> products = productRepository.findByPriceRange(max_price, min_price);
+		
+		if(!products.isEmpty()) {
+			return ResponseEntity.ok().body(ProductDto.convert(products));
+		}
+		
+		return ResponseEntity.notFound().build();
+	}
+
 }
