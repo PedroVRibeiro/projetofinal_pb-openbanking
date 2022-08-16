@@ -40,8 +40,8 @@ public class ProductController {
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<List<ProductDto>> search(@RequestParam Double max_price, @RequestParam Double min_price) {
-		return productService.search(max_price, min_price);
+	public ResponseEntity<List<ProductDto>> search(@RequestParam(required = false) Double max_price, @RequestParam(required = false) Double min_price, @RequestParam(required = false) String name) {
+		return productService.search(max_price, min_price, name);
 	}
 	
 	@PostMapping @Transactional
