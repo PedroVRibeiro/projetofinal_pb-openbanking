@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import cadastroclientesapi.demo.entity.Cliente;
 import uol.compass.projetofinal.dto.ProductDto;
 import uol.compass.projetofinal.dto.ProductForm;
 import uol.compass.projetofinal.entities.Product;
@@ -51,6 +50,17 @@ public class ProductService {
 		if(product.isPresent()) {
 			productRepository.deleteById(id);
 			return ResponseEntity.ok().build();
+		}
+		
+		return ResponseEntity.notFound().build();
+	}
+
+	public ResponseEntity<ProductDto> update(Integer id, ProductForm form) {
+		Optional<Product> product = productRepository.findById(id);
+		
+		if(product.isPresent()) {
+			ProductDto updated = form.updateProduct(id, productRepository);
+			return ResponseEntity.ok().body(updated);
 		}
 		
 		return ResponseEntity.notFound().build();
