@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import cadastroclientesapi.demo.entity.Cliente;
 import uol.compass.projetofinal.dto.ProductDto;
 import uol.compass.projetofinal.dto.ProductForm;
 import uol.compass.projetofinal.entities.Product;
@@ -42,6 +43,17 @@ public class ProductService {
 		
 		URI uri = uriBuilder.path("/products/{id}").buildAndExpand(product.getId()).toUri();
 		return ResponseEntity.created(uri).body(new ProductDto(product));
+	}
+
+	public ResponseEntity<Void> delete(Integer id) {
+		Optional<Product> product = productRepository.findById(id);
+		
+		if(product.isPresent()) {
+			productRepository.deleteById(id);
+			return ResponseEntity.ok().build();
+		}
+		
+		return ResponseEntity.notFound().build();
 	}
 
 }

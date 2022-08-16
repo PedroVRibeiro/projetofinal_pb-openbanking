@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,9 +37,13 @@ public class ProductController {
 		return productService.findById(id);
 	}
 	
-	@PostMapping
-	@Transactional
+	@PostMapping @Transactional
 	public ResponseEntity<ProductDto> create(@RequestBody @Validated ProductForm form, UriComponentsBuilder uriBuilder) {
 		return productService.create(form, uriBuilder);
+	}
+	
+	@DeleteMapping("/{id}") @Transactional
+	public ResponseEntity<Void> delete(@PathVariable Integer id) {
+		return productService.delete(id);
 	}
 }
