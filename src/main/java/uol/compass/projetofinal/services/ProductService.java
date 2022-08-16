@@ -1,8 +1,10 @@
 package uol.compass.projetofinal.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import uol.compass.projetofinal.dto.ProductDto;
@@ -15,10 +17,20 @@ public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	public List<ProductDto> findAll() {
+	public ResponseEntity<List<ProductDto>> findAll() {
 		List<Product> products = productRepository.findAll();
+		return ResponseEntity.ok().body(ProductDto.convert(products));
+	}
+	
+	public ResponseEntity<ProductDto> findById(Integer id) {
+		Optional<Product> product = productRepository.findById(id);
 		
-		return ProductDto.convert(products);
+		if(product.isPresent()) {
+			ProductDto found = ProductDto.convert(product.get());
+			return ResponseEntity.ok().body(found);
+		}
+		
+		return ResponseEntity.notFound().build();
 	}
 
 }

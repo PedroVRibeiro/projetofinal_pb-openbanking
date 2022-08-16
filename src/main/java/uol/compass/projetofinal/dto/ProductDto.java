@@ -54,4 +54,8 @@ public class ProductDto {
 	public static List<ProductDto> convert(List<Product> products) {
 		return products.stream().map(ProductDto::new).collect(Collectors.toList());
 	}
+	
+	public static ProductDto convert(Product product) {
+		return new ProductDto(product);
+	}
 }
