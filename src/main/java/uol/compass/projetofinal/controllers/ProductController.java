@@ -3,10 +3,10 @@ package uol.compass.projetofinal.controllers;
 import java.util.List;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +48,7 @@ public class ProductController {
 	}
 	
 	@PostMapping @Transactional
-	public ResponseEntity<ProductDto> create(@RequestBody @Validated ProductForm form, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<ProductDto> create(@RequestBody @Valid ProductForm form, UriComponentsBuilder uriBuilder) {
 		return productService.create(form, uriBuilder);
 	}
 	

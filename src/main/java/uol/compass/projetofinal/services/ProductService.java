@@ -13,6 +13,7 @@ import uol.compass.projetofinal.dto.ProductDto;
 import uol.compass.projetofinal.dto.ProductForm;
 import uol.compass.projetofinal.entities.Product;
 import uol.compass.projetofinal.repositories.ProductRepository;
+import uol.compass.projetofinal.services.exceptions.ProductNotFoundException;
 
 @Service
 public class ProductService {
@@ -33,7 +34,7 @@ public class ProductService {
 			return ResponseEntity.ok().body(found);
 		}
 		
-		return ResponseEntity.notFound().build();
+		throw new ProductNotFoundException();
 	}
 
 	public ResponseEntity<ProductDto> create(ProductForm form, UriComponentsBuilder uriBuilder) {
@@ -52,7 +53,7 @@ public class ProductService {
 			return ResponseEntity.ok().build();
 		}
 		
-		return ResponseEntity.notFound().build();
+		throw new ProductNotFoundException();
 	}
 
 	public ResponseEntity<ProductDto> update(Integer id, ProductForm form) {
@@ -63,7 +64,7 @@ public class ProductService {
 			return ResponseEntity.ok().body(updated);
 		}
 		
-		return ResponseEntity.notFound().build();
+		throw new ProductNotFoundException();
 	}
 
 	public ResponseEntity<List<ProductDto>> search(Double max_price, Double min_price, String name) {
@@ -73,7 +74,7 @@ public class ProductService {
 			return ResponseEntity.ok().body(ProductDto.convert(products));
 		}
 		
-		return ResponseEntity.notFound().build();
+		throw new ProductNotFoundException();
 	}
 
 }
