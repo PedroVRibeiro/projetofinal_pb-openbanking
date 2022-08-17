@@ -45,8 +45,7 @@ public class ProductForm {
 		return new Product(name, description, price);
 	}
 
-	public ProductDto updateProduct(Integer id, ProductRepository productRepository) {
-		Optional<Product> product = productRepository.findById(id);
+	public ProductDto updateProduct(Optional<Product> product, ProductRepository productRepository) {
 		product.get().setName(this.name);
 		product.get().setDescription(this.description);
 		product.get().setPrice(this.price);

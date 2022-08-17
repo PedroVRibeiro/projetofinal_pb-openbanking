@@ -1,11 +1,9 @@
 package uol.compass.projetofinal.services;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,59 +19,45 @@ public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	public ResponseEntity<List<ProductDto>> findAll() {
+	public List<ProductDto> findAll() {
 		List<Product> products = productRepository.findAll();
-		return ResponseEntity.ok().body(ProductDto.convert(products));
+		return ProductDto.convert(products);
 	}
 	
-	public ResponseEntity<ProductDto> findById(Integer id) {
+	public ProductDto findById(Integer id) {
 		Optional<Product> product = productRepository.findById(id);
-		
-		if(product.isPresent()) {
-			ProductDto found = ProductDto.convert(product.get());
-			return ResponseEntity.ok().body(found);
-		}
-		
-		throw new ProductNotFoundException();
+		return ProductDto.convert(product.orElseThrow(() -> new ProductNotFoundException()));
 	}
 
-	public ResponseEntity<ProductDto> create(ProductForm form, UriComponentsBuilder uriBuilder) {
+	public ProductDto create(ProductForm form, UriComponentsBuilder uriBuilder) {
 		Product product = form.createProduct();
 		productRepository.save(product);
-		
-		URI uri = uriBuilder.path("/products/{id}").buildAndExpand(product.getId()).toUri();
-		return ResponseEntity.created(uri).body(new ProductDto(product));
+		return new ProductDto(product);
 	}
 
-	public ResponseEntity<Void> delete(Integer id) {
+	public void delete(Integer id) {
 		Optional<Product> product = productRepository.findById(id);
 		
 		if(product.isPresent()) {
 			productRepository.deleteById(id);
-			return ResponseEntity.ok().build();
 		}
-		
-		throw new ProductNotFoundException();
 	}
 
-	public ResponseEntity<ProductDto> update(Integer id, ProductForm form) {
+	public ProductDto update(Integer id, ProductForm form) {
 		Optional<Product> product = productRepository.findById(id);
 		
 		if(product.isPresent()) {
-			ProductDto updated = form.updateProduct(id, productRepository);
-			return ResponseEntity.ok().body(updated);
-		}
-		
+			return form.updateProduct(product, productRepository);
+		} 
 		throw new ProductNotFoundException();
 	}
 
-	public ResponseEntity<List<ProductDto>> search(Double max_price, Double min_price, String name) {
+	public List<ProductDto> search(Double max_price, Double min_price, String name) {
 		List<Product> products = productRepository.search(max_price, min_price, name);
 		
 		if(!products.isEmpty()) {
-			return ResponseEntity.ok().body(ProductDto.convert(products));
+			return ProductDto.convert(products);
 		}
-		
 		throw new ProductNotFoundException();
 	}
 

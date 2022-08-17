@@ -1,5 +1,6 @@
 package uol.compass.projetofinal.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -31,12 +32,12 @@ public class ProductController {
 	
 	@GetMapping
 	public ResponseEntity<List<ProductDto>> findAll() {
-		return productService.findAll();
+		return ResponseEntity.ok().body(productService.findAll());
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductDto> findById(@PathVariable Integer id) {
-		return productService.findById(id);
+		return ResponseEntity.ok().body(productService.findById(id));
 	}
 	
 	@GetMapping("/search")
@@ -44,21 +45,24 @@ public class ProductController {
 			@RequestParam(required = false) Double max_price, 
 			@RequestParam(required = false) Double min_price, 
 			@RequestParam(required = false) String name) {
-		return productService.search(max_price, min_price, name);
+		return ResponseEntity.ok().body(productService.search(max_price, min_price, name));
 	}
 	
 	@PostMapping @Transactional
 	public ResponseEntity<ProductDto> create(@RequestBody @Valid ProductForm form, UriComponentsBuilder uriBuilder) {
-		return productService.create(form, uriBuilder);
+		ProductDto productDto = productService.create(form, uriBuilder);
+		URI uri = uriBuilder.path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
 	
 	@DeleteMapping("/{id}") @Transactional
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
-		return productService.delete(id);
+		productService.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("/{id}") @Transactional
 	public ResponseEntity<ProductDto> update(@PathVariable Integer id, @RequestBody ProductForm form) {
-		return productService.update(id, form);
+		return ResponseEntity.ok().body(productService.update(id, form));
 	}
 }
