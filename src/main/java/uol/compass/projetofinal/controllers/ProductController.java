@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import uol.compass.projetofinal.dto.ProductDto;
 import uol.compass.projetofinal.dto.ProductForm;
@@ -49,9 +49,9 @@ public class ProductController {
 	}
 	
 	@PostMapping @Transactional
-	public ResponseEntity<ProductDto> create(@RequestBody @Valid ProductForm form, UriComponentsBuilder uriBuilder) {
-		ProductDto productDto = productService.create(form, uriBuilder);
-		URI uri = uriBuilder.path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
+	public ResponseEntity<ProductDto> create(@RequestBody @Valid ProductForm form) {
+		ProductDto productDto = productService.create(form);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	

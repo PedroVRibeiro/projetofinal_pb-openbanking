@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import uol.compass.projetofinal.dto.ProductDto;
 import uol.compass.projetofinal.dto.ProductForm;
@@ -29,7 +28,7 @@ public class ProductService {
 		return ProductDto.convert(product.orElseThrow(() -> new ProductNotFoundException()));
 	}
 
-	public ProductDto create(ProductForm form, UriComponentsBuilder uriBuilder) {
+	public ProductDto create(ProductForm form) {
 		Product product = form.createProduct();
 		productRepository.save(product);
 		return new ProductDto(product);
