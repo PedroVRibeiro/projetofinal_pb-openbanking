@@ -1,47 +1,55 @@
 package uol.compass.projetofinal.exceptionhandler;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import uol.compass.projetofinal.services.exceptions.ProductNotFoundException;
 
 @RestControllerAdvice
-public class ProductValidationHandler {
-
-	@Autowired
-	private MessageSource messageSource;
+public class ProductValidationHandler extends ResponseEntityExceptionHandler {
 	
 	@ResponseBody
-	@ExceptionHandler
-	public ResponseEntity<MessageExceptionError> productNotFound(ProductNotFoundException productNotFoundException) {
-		MessageExceptionError eh = new MessageExceptionError(HttpStatus.NOT_FOUND.value(), productNotFoundException.getMessage());
-		return new ResponseEntity<MessageExceptionError>(eh, HttpStatus.NOT_FOUND);
+	@ExceptionHandler(ProductNotFoundException.class)
+	public ResponseEntity<ExceptionMessage> productNotFound(ProductNotFoundException productNotFoundException, WebRequest request) {
+		ExceptionMessage em = new ExceptionMessage(HttpStatus.NOT_FOUND.value(), productNotFoundException.getMessage());
+		return new ResponseEntity<ExceptionMessage>(em, HttpStatus.NOT_FOUND);
 	}
 	
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public List<FormError> handle(MethodArgumentNotValidException missingParamsException) {
-		List<FormError> list = new ArrayList<>();
+	@ResponseBody
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ExceptionMessage> invalidParams(IllegalArgumentException illegalArgumentException, WebRequest request) {
+		ExceptionMessage em = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), illegalArgumentException.getMessage());
+		return new ResponseEntity<ExceptionMessage>(em, HttpStatus.BAD_REQUEST);
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
-		List<FieldError> fieldErrors = missingParamsException.getBindingResult().getFieldErrors();
-		fieldErrors.forEach(e -> {
-			String message = messageSource.getMessage(e, LocaleContextHolder.getLocale());
-			FormError error = new FormError(String.valueOf(HttpStatus.BAD_REQUEST), e.getField(), message);
-			list.add(error);
-		});
-		return list;
+		Map<String, List<String>> body = new HashMap<>();
+		
+		List<String> errors = ex.getBindingResult()
+				.getFieldErrors()
+				.stream()
+				.map(DefaultMessageSourceResolvable::getDefaultMessage)
+				.collect(Collectors.toList());
+		
+		body.put("400 - Bad Request", errors);
+		
+		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
 	}
 	
 }

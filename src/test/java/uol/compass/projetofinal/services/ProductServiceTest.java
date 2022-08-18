@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import uol.compass.projetofinal.controllers.ProductController;
 import uol.compass.projetofinal.dto.ProductDto;
 import uol.compass.projetofinal.dto.ProductForm;
 import uol.compass.projetofinal.entities.Product;
@@ -24,8 +23,6 @@ public class ProductServiceTest {
 	private ProductService productService;
 	@Mock
 	private ProductRepository productRepository;
-	@Mock
-	private ProductController productController;
 	
 	private Product product;
 	private ProductDto productDto;
@@ -95,6 +92,32 @@ public class ProductServiceTest {
 	}
 	
 	@Test
+	void shouldCreateProduct() {
+		Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
+		
+		ProductDto productDto = productService.create(productForm);
+		
+		Assertions.assertNotNull(productDto);	
+		Assertions.assertEquals(ProductDto.class, productDto.getClass());		
+		Assertions.assertEquals("Celular", productDto.getName());	
+		Assertions.assertEquals("um celular", productDto.getDescription());	
+		Assertions.assertEquals(1000.0, productDto.getPrice());	
+	}
+	
+//	@Test
+//	void shouldUpdateProduct() {
+//		Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
+//		
+//		ProductDto productDto = productService.update(1, productForm);
+//		
+//		Assertions.assertNotNull(productDto);	
+//		Assertions.assertEquals(ProductDto.class, productDto.getClass());		
+//		Assertions.assertEquals("Celular", productDto.getName());	
+//		Assertions.assertEquals("um celular", productDto.getDescription());	
+//		Assertions.assertEquals(1000.0, productDto.getPrice());	
+//	}
+	
+	@Test
 	void shouldReturnNotFoundWhenUpdatingAnInexistentId() {
 		Mockito.when(productRepository.findById(Mockito.anyInt())).thenThrow(new ProductNotFoundException());
 		
@@ -109,12 +132,14 @@ public class ProductServiceTest {
 	private void startProduct() {
 		product = new Product("Celular", "um celular", 1000.0);
 		product.setId(1);
+		
 		productDto = new ProductDto(product);
+		
 		productForm = new ProductForm();
 		productForm.setName("Celular");
 		productForm.setDescription("um celular");
 		productForm.setPrice(1000.0);
-		optionalProduct = Optional.of(product);
 		
+		optionalProduct = Optional.of(product);
 	}
 }

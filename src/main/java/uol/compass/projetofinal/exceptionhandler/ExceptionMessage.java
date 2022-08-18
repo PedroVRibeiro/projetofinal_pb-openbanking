@@ -1,11 +1,14 @@
 package uol.compass.projetofinal.exceptionhandler;
 
-public class MessageExceptionError {
+import java.io.Serializable;
 
+public class ExceptionMessage implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private Integer status;
 	private String message;
 
-	public MessageExceptionError(Integer status, String message) {
+	public ExceptionMessage(Integer status, String message) {
 		this.status = status;
 		this.message = message;
 	}

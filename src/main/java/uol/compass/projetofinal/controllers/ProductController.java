@@ -49,7 +49,7 @@ public class ProductController {
 	}
 	
 	@PostMapping @Transactional
-	public ResponseEntity<ProductDto> create(@RequestBody @Valid ProductForm form) {
+	public ResponseEntity<ProductDto> create(@Valid @RequestBody ProductForm form) {
 		ProductDto productDto = productService.create(form);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
