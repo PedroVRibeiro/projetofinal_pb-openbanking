@@ -25,7 +25,6 @@ public class ProductServiceTest {
 	private ProductRepository productRepository;
 	
 	private Product product;
-	private ProductDto productDto;
 	private ProductForm productForm;
 	private Optional<Product> optionalProduct;
 
@@ -104,18 +103,18 @@ public class ProductServiceTest {
 		Assertions.assertEquals(1000.0, productDto.getPrice());	
 	}
 	
-//	@Test
-//	void shouldUpdateProduct() {
-//		Mockito.when(productRepository.save(Mockito.any())).thenReturn(product);
-//		
-//		ProductDto productDto = productService.update(1, productForm);
-//		
-//		Assertions.assertNotNull(productDto);	
-//		Assertions.assertEquals(ProductDto.class, productDto.getClass());		
-//		Assertions.assertEquals("Celular", productDto.getName());	
-//		Assertions.assertEquals("um celular", productDto.getDescription());	
-//		Assertions.assertEquals(1000.0, productDto.getPrice());	
-//	}
+	@Test
+	void shouldUpdateProduct() {
+		Mockito.when(productRepository.findById(Mockito.anyInt())).thenReturn(optionalProduct);
+		
+		ProductDto productDto = productService.update(1, productForm);
+		
+		Assertions.assertNotNull(productDto);	
+		Assertions.assertEquals(ProductDto.class, productDto.getClass());		
+		Assertions.assertEquals("Celular", productDto.getName());	
+		Assertions.assertEquals("um celular", productDto.getDescription());	
+		Assertions.assertEquals(1000.0, productDto.getPrice());	
+	}
 	
 	@Test
 	void shouldReturnNotFoundWhenUpdatingAnInexistentId() {
@@ -133,7 +132,7 @@ public class ProductServiceTest {
 		product = new Product("Celular", "um celular", 1000.0);
 		product.setId(1);
 		
-		productDto = new ProductDto(product);
+		new ProductDto(product);
 		
 		productForm = new ProductForm();
 		productForm.setName("Celular");
