@@ -1,20 +1,15 @@
 package uol.compass.projetofinal.dto;
 
-import java.util.Optional;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import uol.compass.projetofinal.entities.Product;
-import uol.compass.projetofinal.repositories.ProductRepository;
-
 public class ProductForm {
 
-	@NotNull @NotEmpty
+	@NotEmpty(message = "the name should not be empty")
 	private String name;
-	@NotNull @NotEmpty
+	@NotEmpty(message = "the description should not be empty")
 	private String description;
-	@NotNull
+	@NotNull(message = "the price should not be empty")
 	private Double price;
 
 	public String getName() {
@@ -40,16 +35,4 @@ public class ProductForm {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-	
-	public Product createProduct() {
-		return new Product(name, description, price);
-	}
-
-	public ProductDto updateProduct(Optional<Product> product, ProductRepository productRepository) {
-		product.get().setName(this.name);
-		product.get().setDescription(this.description);
-		product.get().setPrice(this.price);
-		return new ProductDto(product.get());
-	}
-
 }

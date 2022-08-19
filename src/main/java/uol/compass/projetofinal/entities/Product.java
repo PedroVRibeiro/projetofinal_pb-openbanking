@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import uol.compass.projetofinal.dto.ProductForm;
+
 @Entity
 public class Product {
 
@@ -22,6 +24,12 @@ public class Product {
 		this.name = name;
 		this.description = description;
 		this.price = price;
+	}
+	
+	public Product(ProductForm productForm) {
+		this.name = productForm.getName();
+		this.description = productForm.getDescription();
+		this.price = productForm.getPrice();
 	}
 
 	public Integer getId() {

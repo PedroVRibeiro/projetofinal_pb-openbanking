@@ -3,7 +3,6 @@ package uol.compass.projetofinal.controllers;
 import java.net.URI;
 import java.util.List;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,21 +47,21 @@ public class ProductController {
 		return ResponseEntity.ok().body(productService.search(max_price, min_price, name));
 	}
 	
-	@PostMapping @Transactional
+	@PostMapping
 	public ResponseEntity<ProductDto> create(@Valid @RequestBody ProductForm form) {
 		ProductDto productDto = productService.create(form);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
-		return ResponseEntity.created(uri).build();
+		return ResponseEntity.created(uri).body(productDto);
 	}
 	
-	@DeleteMapping("/{id}") @Transactional
+	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		productService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping("/{id}") @Transactional
-	public ResponseEntity<ProductDto> update(@PathVariable Integer id, @RequestBody ProductForm form) {
+	@PutMapping("/{id}")
+	public ResponseEntity<ProductDto> update(@PathVariable Integer id, @Valid @RequestBody ProductForm form) {
 		return ResponseEntity.ok().body(productService.update(id, form));
 	}
 }

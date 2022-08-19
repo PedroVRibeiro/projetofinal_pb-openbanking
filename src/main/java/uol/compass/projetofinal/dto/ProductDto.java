@@ -1,8 +1,5 @@
 package uol.compass.projetofinal.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import uol.compass.projetofinal.entities.Product;
 
 public class ProductDto {
@@ -49,13 +46,5 @@ public class ProductDto {
 
 	public void setPrice(Double price) {
 		this.price = price;
-	}
-
-	public static List<ProductDto> convert(List<Product> products) {
-		return products.stream().map(ProductDto::new).collect(Collectors.toList());
-	}
-	
-	public static ProductDto convert(Product product) {
-		return new ProductDto(product);
 	}
 }
