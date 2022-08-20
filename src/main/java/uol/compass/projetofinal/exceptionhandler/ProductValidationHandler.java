@@ -16,33 +16,33 @@ public class ProductValidationHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(ProductNotFoundException.class)
 	public ResponseEntity<Object> productNotFound(ProductNotFoundException e, WebRequest request) {
-		ExceptionMessage formError = new ExceptionMessage(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
-		return new ResponseEntity<Object>(formError, new HttpHeaders(), formError.getStatus());
+		ExceptionMessage message = new ExceptionMessage(HttpStatus.NOT_FOUND.value(), "NOT FOUND: " + e.getLocalizedMessage());
+		return new ResponseEntity<Object>(message, new HttpHeaders(), message.getStatus());
 	}
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, WebRequest request) {
-		ExceptionMessage formError = new ExceptionMessage(HttpStatus.BAD_REQUEST, "the id should be an integer");
-		return new ResponseEntity<Object>(formError, new HttpHeaders(), formError.getStatus());
+		ExceptionMessage message = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), "BAD REQUEST: " + "the id should be a number");
+		return new ResponseEntity<Object>(message, new HttpHeaders(), message.getStatus());
 	}
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		ExceptionMessage formError = new ExceptionMessage(HttpStatus.BAD_REQUEST, "one or more given parameters are not valid");
-		return handleExceptionInternal(e, formError, headers, formError.getStatus(), request);
+		ExceptionMessage message = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), "BAD REQUEST: " + "one or more given parameters are not valid");
+		return handleExceptionInternal(e, message, headers, HttpStatus.BAD_REQUEST, request);
 	}
 	
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		ExceptionMessage formError = new ExceptionMessage(HttpStatus.BAD_REQUEST, "the request is missing one or more parameters");
-		return handleExceptionInternal(e, formError, headers, formError.getStatus(), request);
+		ExceptionMessage message = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), "BAD REQUEST: " + "the request is missing one or more parameters");
+		return handleExceptionInternal(e, message, headers, HttpStatus.BAD_REQUEST, request);
 	}
 	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleAll(Exception e, WebRequest request) {
-		ExceptionMessage formError = new ExceptionMessage(HttpStatus.INTERNAL_SERVER_ERROR, "an error ocurred");
-		return new ResponseEntity<Object>(formError, new HttpHeaders(), formError.getStatus());
+		ExceptionMessage message = new ExceptionMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), "INTERNAL SERVER ERROR: " + "an error ocurred");
+		return new ResponseEntity<Object>(message, new HttpHeaders(), message.getStatus());
 	}
 }

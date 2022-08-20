@@ -2,15 +2,13 @@ package uol.compass.projetofinal.exceptionhandler;
 
 import java.io.Serializable;
 
-import org.springframework.http.HttpStatus;
-
 public class ExceptionMessage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private HttpStatus status;
+	private Integer status;
 	private String message;
 
-	public ExceptionMessage(HttpStatus status, String message) {
+	public ExceptionMessage(Integer status, String message) {
 		this.status = status;
 		this.message = message;
 	}
@@ -19,7 +17,7 @@ public class ExceptionMessage implements Serializable {
 		return serialVersionUID;
 	}
 
-	public HttpStatus getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
