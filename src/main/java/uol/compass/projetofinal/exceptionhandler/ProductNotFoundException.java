@@ -1,4 +1,4 @@
-package uol.compass.projetofinal.services.exceptions;
+package uol.compass.projetofinal.exceptionhandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -8,6 +8,6 @@ public class ProductNotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	public ProductNotFoundException() {
-		super("Product not found.");
+		super("product not found.");
 	}
 }

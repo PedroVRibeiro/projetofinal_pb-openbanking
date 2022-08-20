@@ -1,55 +1,48 @@
 package uol.compass.projetofinal.exceptionhandler;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import uol.compass.projetofinal.services.exceptions.ProductNotFoundException;
 
 @RestControllerAdvice
 public class ProductValidationHandler extends ResponseEntityExceptionHandler {
 	
-	@ResponseBody
 	@ExceptionHandler(ProductNotFoundException.class)
-	public ResponseEntity<ExceptionMessage> productNotFound(ProductNotFoundException productNotFoundException, WebRequest request) {
-		ExceptionMessage em = new ExceptionMessage(HttpStatus.NOT_FOUND.value(), productNotFoundException.getMessage());
-		return new ResponseEntity<ExceptionMessage>(em, HttpStatus.NOT_FOUND);
+	public ResponseEntity<Object> productNotFound(ProductNotFoundException e, WebRequest request) {
+		ExceptionMessage formError = new ExceptionMessage(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+		return new ResponseEntity<Object>(formError, new HttpHeaders(), formError.getStatus());
 	}
 	
-	@ResponseBody
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<ExceptionMessage> invalidParams(IllegalArgumentException illegalArgumentException, WebRequest request) {
-		ExceptionMessage em = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), illegalArgumentException.getMessage());
-		return new ResponseEntity<ExceptionMessage>(em, HttpStatus.BAD_REQUEST);
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, WebRequest request) {
+		ExceptionMessage formError = new ExceptionMessage(HttpStatus.BAD_REQUEST, "the id should be an integer");
+		return new ResponseEntity<Object>(formError, new HttpHeaders(), formError.getStatus());
 	}
 	
 	@Override
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		
-		Map<String, List<String>> body = new HashMap<>();
-		
-		List<String> errors = ex.getBindingResult()
-				.getFieldErrors()
-				.stream()
-				.map(DefaultMessageSourceResolvable::getDefaultMessage)
-				.collect(Collectors.toList());
-		
-		body.put("400 - Bad Request", errors);
-		
-		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+		ExceptionMessage formError = new ExceptionMessage(HttpStatus.BAD_REQUEST, "one or more given parameters are not valid");
+		return handleExceptionInternal(e, formError, headers, formError.getStatus(), request);
 	}
 	
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		ExceptionMessage formError = new ExceptionMessage(HttpStatus.BAD_REQUEST, "the request is missing one or more parameters");
+		return handleExceptionInternal(e, formError, headers, formError.getStatus(), request);
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> handleAll(Exception e, WebRequest request) {
+		ExceptionMessage formError = new ExceptionMessage(HttpStatus.INTERNAL_SERVER_ERROR, "an error ocurred");
+		return new ResponseEntity<Object>(formError, new HttpHeaders(), formError.getStatus());
+	}
 }

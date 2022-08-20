@@ -25,7 +25,7 @@ public class Product {
 		this.description = description;
 		this.price = price;
 	}
-	
+
 	public Product(ProductForm productForm) {
 		this.name = productForm.getName();
 		this.description = productForm.getDescription();
