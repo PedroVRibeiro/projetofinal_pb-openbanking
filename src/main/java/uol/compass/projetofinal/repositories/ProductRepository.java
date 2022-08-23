@@ -15,7 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	@Query("SELECT p FROM Product p WHERE "
 			+ "(:max_price IS NULL OR p.price <= :max_price) AND "
 			+ "(:min_price IS NULL OR p.price >= :min_price) AND "
-			+ "(:name IS NULL OR lower(p.name) = lower(:name))")
+			+ "(:name IS NULL OR lower(p.name) LIKE lower(concat('%', :name, '%')))")
 	public List<Product> search(@Param("max_price") Double max_price, @Param("min_price") Double min_price, @Param("name") String name);
 	
 }
