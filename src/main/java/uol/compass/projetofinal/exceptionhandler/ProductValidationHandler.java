@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
@@ -37,6 +38,13 @@ public class ProductValidationHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		ExceptionMessage message = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), "BAD REQUEST: " + "the request is missing one or more parameters");
+		return handleExceptionInternal(e, message, headers, HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException e, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		ExceptionMessage message = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), "BAD REQUEST: " + "the path given does not exist");
 		return handleExceptionInternal(e, message, headers, HttpStatus.BAD_REQUEST, request);
 	}
 	

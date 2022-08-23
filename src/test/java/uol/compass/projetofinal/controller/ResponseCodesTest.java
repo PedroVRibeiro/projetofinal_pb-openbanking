@@ -149,4 +149,16 @@ public class ResponseCodesTest {
 				.status()
 				.is(400));
 	}
+	
+	@Test
+	public void shouldReturn400WhenGivenWrongUrlPath() throws Exception {
+		URI uri = new URI("/prod");
+		
+		mockMvc.perform(MockMvcRequestBuilders
+				.get(uri)
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(MockMvcResultMatchers
+				.status()
+				.is(400));
+	}
 }
