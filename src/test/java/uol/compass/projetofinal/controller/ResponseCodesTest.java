@@ -97,6 +97,21 @@ public class ResponseCodesTest {
 	}
 	
 	@Test
+	public void shouldReturn400WhenInvalidPostPathIsGiven() throws Exception {
+		URI uri = new URI("/products/1");
+		
+		String content = "{ \"name\" : \"\" , \"description\" : \"\" , \"price\" : \"1200.0\"}";
+		
+		mockMvc.perform(MockMvcRequestBuilders
+				.post(uri)
+				.content(content)
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(MockMvcResultMatchers
+				.status()
+				.is(400));
+	}
+	
+	@Test
 	public void shouldReturn204WhenDeletedwithValidId() throws Exception {
 		URI uri = new URI("/products/3");
 		

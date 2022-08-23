@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -45,6 +46,13 @@ public class ProductValidationHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException e, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 		ExceptionMessage message = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), "BAD REQUEST: " + "the path given does not exist");
+		return handleExceptionInternal(e, message, headers, HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		ExceptionMessage message = new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), "BAD REQUEST: " + "the given method signature does not exist");
 		return handleExceptionInternal(e, message, headers, HttpStatus.BAD_REQUEST, request);
 	}
 	
