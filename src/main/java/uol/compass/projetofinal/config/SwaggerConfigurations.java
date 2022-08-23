@@ -8,9 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ResponseMessage;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -28,7 +30,8 @@ public class SwaggerConfigurations {
 				.globalResponseMessage(RequestMethod.GET, responseMessageForGet())
 				.globalResponseMessage(RequestMethod.POST, responseMessageForPost())
 				.globalResponseMessage(RequestMethod.PUT, responseMessageForPut())
-				.globalResponseMessage(RequestMethod.DELETE, responseMessageForDelete());
+				.globalResponseMessage(RequestMethod.DELETE, responseMessageForDelete())
+				.apiInfo(apiInfo());
 	}
 	
 	private List<ResponseMessage> responseMessageForGet() {
@@ -117,5 +120,15 @@ public class SwaggerConfigurations {
 					.build());
 			}
 		};
+	}
+	
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder()
+				.title("Projeto Final - PB Compass - Open Banking 2022")
+				.description("Projeto final do programa de bolsas Compass.uol - Open Banking de julho de 2022")
+				.version("1.0.0")
+				.license("Apache License Version 2.0")
+	            .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
+				.build();
 	}
 }
