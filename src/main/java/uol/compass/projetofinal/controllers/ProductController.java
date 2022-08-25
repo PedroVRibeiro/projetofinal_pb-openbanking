@@ -24,7 +24,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import springfox.documentation.annotations.ApiIgnore;
 import uol.compass.projetofinal.dto.ProductDto;
 import uol.compass.projetofinal.dto.ProductForm;
 import uol.compass.projetofinal.services.ProductService;
@@ -40,7 +39,7 @@ public class ProductController {
 	@ApiOperation(value = "Lists all products")
 	@ApiResponse(code = 200, message = "OK")
 	public ResponseEntity<Page<ProductDto>> findAll(
-			@ApiIgnore @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 2) Pageable pageable) {
+			@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 3) Pageable pageable) {
 		return ResponseEntity.ok().body(productService.findAll(pageable));
 	}
 
@@ -63,7 +62,7 @@ public class ProductController {
 			 @ApiResponse(code = 500, message = "Internal Error")
 		})
 	public ResponseEntity<Page<ProductDto>> search(
-			@ApiIgnore @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 2) Pageable pageable,
+			@PageableDefault(sort = "price", direction = Direction.ASC, page = 0, size = 3) Pageable pageable,
 			@RequestParam(required = false) Double max_price,
 			@RequestParam(required = false) Double min_price, 
 			@RequestParam(required = false) String name) {
