@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import uol.compass.projetofinal.dto.ProductDto;
 import uol.compass.projetofinal.dto.ProductForm;
@@ -27,6 +29,7 @@ public class ProductServiceTest {
 	private Product product;
 	private ProductForm productForm;
 	private Optional<Product> optionalProduct;
+	private Pageable pageable;
 
 	@BeforeEach
 	void setUp() {
@@ -38,10 +41,10 @@ public class ProductServiceTest {
 	void shouldReturnAllProducts() {
 		Mockito.when(productRepository.findAll()).thenReturn(List.of(product));
 
-		List<ProductDto> response = productService.findAll();
+		Page<ProductDto> response = productService.findAll(pageable);
 
 		Assertions.assertNotNull(response);
-		Assertions.assertEquals(ProductDto.class, response.get(0).getClass());
+		Assertions.assertEquals(ProductDto.class, response.get().getClass());
 
 	}
 
