@@ -50,7 +50,7 @@ public class SearchEndpointTest {
 
 	@Test
 	public void shouldFindNoProductsIfMinPriceIsTooHigh() {
-		Double min_price = 5000.0;
+		Double min_price = 20000.0;
 		Page<Product> products = productRepository.search(null, min_price, null, pageable);
 		Assertions.assertTrue(products.isEmpty());
 	}
@@ -103,8 +103,8 @@ public class SearchEndpointTest {
 
 	@Test
 	public void shouldFindNoProductWithMatchingNameButOutsideOfPriceRange() {
-		Double max_price = 5000.0;
-		Double min_price = 900.0;
+		Double max_price = 1300.0;
+		Double min_price = 1290.0;
 		String name = "Celular";
 		Page<Product> products = productRepository.search(max_price, min_price, name, pageable);
 		Assertions.assertTrue(products.isEmpty());
