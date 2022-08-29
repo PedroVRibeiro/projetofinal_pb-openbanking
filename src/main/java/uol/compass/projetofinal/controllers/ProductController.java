@@ -21,9 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import springfox.documentation.annotations.ApiIgnore;
 import uol.compass.projetofinal.dto.ProductDto;
 import uol.compass.projetofinal.dto.ProductForm;
 import uol.compass.projetofinal.services.ProductService;
@@ -38,8 +41,13 @@ public class ProductController {
 	@GetMapping
 	@ApiOperation(value = "Lists all products")
 	@ApiResponse(code = 200, message = "OK")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "page", dataType = "integer", paramType = "query", value = "Starting page", defaultValue = "0"),
+		@ApiImplicitParam(name = "size", dataType = "integer", paramType = "query", value = "Number of products in each page", defaultValue = "3"),
+		@ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query", value = "Sorting by name, description or price")
+	})
 	public ResponseEntity<Page<ProductDto>> findAll(
-			@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 3) Pageable pageable) {
+			@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 3) @ApiIgnore Pageable pageable) {
 		return ResponseEntity.ok().body(productService.findAll(pageable));
 	}
 
@@ -61,8 +69,13 @@ public class ProductController {
 			 @ApiResponse(code = 404, message = "Not Found"),
 			 @ApiResponse(code = 500, message = "Internal Error")
 		})
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "page", dataType = "integer", paramType = "query", value = "Starting page", defaultValue = "0"),
+		@ApiImplicitParam(name = "size", dataType = "integer", paramType = "query", value = "Number of products in each page", defaultValue = "3"),
+		@ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query", value = "Sorting by name, description or price")
+	})
 	public ResponseEntity<Page<ProductDto>> search(
-			@PageableDefault(sort = "price", direction = Direction.ASC, page = 0, size = 3) Pageable pageable,
+			@PageableDefault(sort = "price", direction = Direction.ASC, page = 0, size = 3) @ApiIgnore Pageable pageable,
 			@RequestParam(required = false) Double max_price,
 			@RequestParam(required = false) Double min_price, 
 			@RequestParam(required = false) String name) {
